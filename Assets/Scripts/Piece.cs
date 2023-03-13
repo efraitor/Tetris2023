@@ -26,6 +26,48 @@ public class Piece : MonoBehaviour
             //Llamamos al método de movimiento horizontal y le pasamos la dirección derecha
             MovePieceHorizontally(1);
         }
+        //Rotación de la pieza
+        else if(Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            //Roto la pieza hacia la derecha
+            transform.Rotate(0, 0, -90);
+
+            //Si la posición es válida
+            if(IsValidPiecePosition())
+            {
+                //Actualizamos la rejilla, guardando la nueva posición en el GridHelper
+                UpdateGrid();
+            }
+            //Si la posición no es válida
+            else
+            {
+                transform.Rotate(0, 0, 90);
+            }
+        }
+        //Mover la pieza hacia abajo al pulsar la tecla o cuando haya pasado más de un segundo desde la última vez que se movió
+        else if(Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            //Muevo la pieza hacia abajo una posición
+            transform.position += new Vector3(0, -1, 0);
+
+            //Si la posición es válida
+            if(IsValidPiecePosition())
+            {
+                //Actualizamos la rejilla, guardando la nueva posición en el GridHelper
+                UpdateGrid();
+            }
+            //Si la posición no es válida
+            else
+            {
+                //Revierto el movimiento hacia abajo sumando uno hacia arriba
+                transform.position += new Vector3(0, 1, 0);
+
+                //Hacemos que aparezca una pieza nueva, llamando al método del PieceSpawner
+                FindObjectOfType<PieceSpawner>().SpawnNextPiece(); //Busca un objeto de ese tipo para poder usar sus métodos y variables
+                //Deshabilitamos este script para que esta pieza no vuelva a moverse
+                this.enabled = false;
+            }
+        }
     }
 
     //Método para el movimiento horizontal

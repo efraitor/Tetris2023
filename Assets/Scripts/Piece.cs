@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour
 {
+    //Última cáida(bajada) de la pieza hace 0 segundos
+    float lastFall = 0.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +48,7 @@ public class Piece : MonoBehaviour
             }
         }
         //Mover la pieza hacia abajo al pulsar la tecla o cuando haya pasado más de un segundo desde la última vez que se movió
-        else if(Input.GetKeyDown(KeyCode.DownArrow))
+        else if(Input.GetKeyDown(KeyCode.DownArrow) || lastFall >= 1.0f)
         {
             //Muevo la pieza hacia abajo una posición
             transform.position += new Vector3(0, -1, 0);
@@ -61,13 +64,18 @@ public class Piece : MonoBehaviour
             {
                 //Revierto el movimiento hacia abajo sumando uno hacia arriba
                 transform.position += new Vector3(0, 1, 0);
-
+                //Si ya no pudiese bajar más, habría que detectar si es momento de borrar una fila
+                GridHelper.DeleteAllFullRows();
                 //Hacemos que aparezca una pieza nueva, llamando al método del PieceSpawner
                 FindObjectOfType<PieceSpawner>().SpawnNextPiece(); //Busca un objeto de ese tipo para poder usar sus métodos y variables
                 //Deshabilitamos este script para que esta pieza no vuelva a moverse
                 this.enabled = false;
             }
+            //Reiniciamos el contador de tiempo
+            lastFall = 0;
         }
+        //Cuento en milisegundos cuanto ha pasado desde la última caída
+        lastFall += Time.deltaTime;
     }
 
     //Método para el movimiento horizontal

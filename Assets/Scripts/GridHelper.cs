@@ -33,7 +33,14 @@ public class GridHelper : MonoBehaviour
           //Si ambas coordenadas son positivas y no se pasan por la derecha
           if(pos.x >= 0 && pos.y >= 0 && pos.x < w)
           {
-                //PABLO TROYA TE AMO
+               //La pieza está dentro de la zona de juego
+               return true;
+          }
+          //Si lo de arriba no se cumple
+          else
+          {
+                //La pieza está fuera de la zona de juego
+                return false;
           }
      }
 }
